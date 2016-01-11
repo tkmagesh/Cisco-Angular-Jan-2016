@@ -37,7 +37,7 @@
     };
 
     //View
-    $(document).ready(function(){
+    angular.element(document).ready(function(){
         angular.injector(["ng"]).invoke(function($rootScope){
             window.scope = $rootScope;
             scope.calculator = new SalaryCalculator();

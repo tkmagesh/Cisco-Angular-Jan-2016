@@ -6,8 +6,8 @@
     <!--
         Use Cases
         =========
-        1. List the bugs
-        2. Add a new bug
+        1. List the bugs - done
+        2. Add a new bug - done
         3. Toggle the closed status of a bug
         4. Remove the closed bugs
         5. Display statistics
@@ -43,10 +43,15 @@
         var bugTrackerApp = angular.module("bugTrackerApp", []);
         bugTrackerApp.controller("bugsController", function($scope){
             $scope.bugs = [
-                "Server communication failure",
-                "User authentication does not work",
-                "Data persistence fails"
+                {name : "Server communication failure", isClosed : false},
+                {name : "User authentication does not work", isClosed : false},
+                {name : "Data persistence fails", isClosed : false},
             ];
+            $scope.newBug = ''
+            $scope.addNew = function(){
+                $scope.bugs.push($scope.newBug);
+                $scope.newBug = '';
+            };
         });
     </script>
 </head>
@@ -63,11 +68,13 @@
         <section class="sort"></section>
         <section class="list">
             <label for="">Bug :</label>
-            <input type="text" name="" id="">
-            <input type="button" value="Add Bug" id="btnAddBug">
+            <input type="text" ng-model="newBug">
+            <input type="button" value="Add Bug" id="btnAddBug" ng-click="addNew()">
             <input type="button" value="Remove Closed" id="btnRemoveClosed">
             <ol>
-               <li>{{bugs}}</li>
+               <li ng-repeat="bug in bugs">
+                   <span>{{bug}}</span>
+               </li>
             </ol>
         </section>
     </section>

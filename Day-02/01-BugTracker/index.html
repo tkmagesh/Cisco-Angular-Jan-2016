@@ -8,9 +8,9 @@
         =========
         1. List the bugs - done
         2. Add a new bug - done
-        3. Toggle the closed status of a bug
-        4. Remove the closed bugs
-        5. Display statistics
+        3. Toggle the closed status of a bug - done
+        4. Remove the closed bugs - done
+        5. Display statistics - done
         5. Search for bugs
         6. Sort the bugs
         7. Improvise the bug display
@@ -44,13 +44,26 @@
         bugTrackerApp.controller("bugsController", function($scope){
             $scope.bugs = [
                 {name : "Server communication failure", isClosed : false},
-                {name : "User authentication does not work", isClosed : false},
+                {name : "User authentication does not work", isClosed : true},
                 {name : "Data persistence fails", isClosed : false},
             ];
+            $scope.getClosedCount = function(){
+               return $scope.bugs.reduce(function(result, bug){
+                   return bug.isClosed ? ++result : result;
+               },0);
+            };
             $scope.newBug = ''
             $scope.addNew = function(){
                 $scope.bugs.push($scope.newBug);
                 $scope.newBug = '';
+            };
+            $scope.toggleBug = function(bug){
+                bug.isClosed = !bug.isClosed;
+            };
+            $scope.removeClosed = function(){
+                for(var i=$scope.bugs.length-1; i>=0; i--)
+                    if ($scope.bugs[i].isClosed)
+                        $scope.bugs.splice(i,1);
             };
         });
     </script>
@@ -60,20 +73,35 @@
     <hr>
     <section class="bugs" ng-controller="bugsController">
         <section class="stats">
-            <span class="closed">5</span>
+            <span class="closed">{{getClosedCount()}}</span>
             <span> / </span>
             <span>{{bugs.length}}</span>
         </section>
-        <section class="search"></section>
-        <section class="sort"></section>
+        <section class="search">
+            <label for="">Search :</label>
+            <input type="text" ng-model="searchBug.name">
+            <label for="">Is Closed ?</label>
+            <input type="checkbox" ng-model="searchBug.isClosed">
+            <input type="button" value="Show All" ng-click="searchBug.isClosed=undefined">
+        </section>
+        <section class="sort">
+            <label for="">Order By:</label>
+            <input type="text" name="" id="" ng-model="bugOrder.by">
+            <label for="">Descending ? :</label>
+            <input type="checkbox" ng-model="bugOrder.order">
+        </section>
         <section class="list">
             <label for="">Bug :</label>
             <input type="text" ng-model="newBug">
             <input type="button" value="Add Bug" id="btnAddBug" ng-click="addNew()">
-            <input type="button" value="Remove Closed" id="btnRemoveClosed">
+            <input type="button" value="Remove Closed" id="btnRemoveClosed" ng-click="removeClosed()">
             <ol>
-               <li ng-repeat="bug in bugs">
-                   <span>{{bug}}</span>
+               <li ng-repeat="bug in bugs | filter:searchBug | orderBy:bugOrder.by:bugOrder.order">
+                   <span
+                       ng-click="toggleBug(bug)"
+                       ng-class="{closed : bug.isClosed}">
+                        {{bug.name}}
+                    </span>
                </li>
             </ol>
         </section>

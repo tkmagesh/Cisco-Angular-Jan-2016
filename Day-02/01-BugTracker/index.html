@@ -38,26 +38,39 @@
             cursor: pointer;
         }
     </style>
+    <script src="angular.js"></script>
+    <script>
+        var bugTrackerApp = angular.module("bugTrackerApp", []);
+        bugTrackerApp.controller("bugsController", function($scope){
+            $scope.bugs = [
+                "Server communication failure",
+                "User authentication does not work",
+                "Data persistence fails"
+            ];
+        });
+    </script>
 </head>
-<body>
+<body ng-app="bugTrackerApp">
     <h1>Bug Tracker</h1>
     <hr>
-    <section class="stats">
-        <span class="closed">5</span>
-        <span> / </span>
-        <span>10</span>
+    <section class="bugs" ng-controller="bugsController">
+        <section class="stats">
+            <span class="closed">5</span>
+            <span> / </span>
+            <span>{{bugs.length}}</span>
+        </section>
+        <section class="search"></section>
+        <section class="sort"></section>
+        <section class="list">
+            <label for="">Bug :</label>
+            <input type="text" name="" id="">
+            <input type="button" value="Add Bug" id="btnAddBug">
+            <input type="button" value="Remove Closed" id="btnRemoveClosed">
+            <ol>
+               <li>{{bugs}}</li>
+            </ol>
+        </section>
     </section>
-    <section class="search"></section>
-    <section class="sort"></section>
-    <section class="list">
-        <label for="">Bug :</label>
-        <input type="text" name="" id="">
-        <input type="button" value="Add Bug" id="btnAddBug">
-        <input type="button" value="Remove Closed" id="btnRemoveClosed">
-        <ol>
-            <li><span  class="closed">Results are not displayed</span></li>
-            <li><span>Data Validation failure</span></li>
-        </ol>
-    </section>
+
 </body>
 </html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug Tracker</title>
+    <!--
+        Use Cases
+        =========
+        1. List the bugs
+        2. Add a new bug
+        3. Toggle the closed status of a bug
+        4. Remove the closed bugs
+        5. Display statistics
+        5. Search for bugs
+        6. Sort the bugs
+        7. Improvise the bug display
+        8. Persist the bugs in storage (localStorage)
+        9. Display 'createdAt' for each bug
+        10. Persist the bugs in the server
+        --------------------------
+        11. Categorize the bugs
+
+    -->
+    <style>
+        section{
+            margin-bottom: 10px;
+        }
+        .closed{
+            color : red;
+            text-decoration: line-through;
+            font-style: italic;
+            font-weight: bold;
+        }
+        .stats{
+            font-size: 23pt;
+        }
+        li span{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bug Tracker</h1>
+    <hr>
+    <section class="stats">
+        <span class="closed">5</span>
+        <span> / </span>
+        <span>10</span>
+    </section>
+    <section class="search"></section>
+    <section class="sort"></section>
+    <section class="list">
+        <label for="">Bug :</label>
+        <input type="text" name="" id="">
+        <input type="button" value="Add Bug" id="btnAddBug">
+        <input type="button" value="Remove Closed" id="btnRemoveClosed">
+        <ol>
+            <li><span  class="closed">Results are not displayed</span></li>
+            <li><span>Data Validation failure</span></li>
+        </ol>
+    </section>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "bugs": [
+    {
+      "id": 1,
+      "name": "This is a new bug",
+      "isClosed": false,
+      "createdAt": "2016-01-13T04:24:42.732Z"
+    },
+    {
+      "id": 2,
+      "name": "This is juz another new bug",
+      "isClosed": false,
+      "createdAt": "2016-01-13T04:24:50.973Z"
+    }
+  ]
+}

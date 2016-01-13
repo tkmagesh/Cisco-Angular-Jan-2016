@@ -4,58 +4,21 @@
 
 describe('my app', function() {
 
+    describe("greeter", function(){
+        beforeEach(function(){
+            browser.get("index.html#/greet");
+        });
+        it("Should be able to greet the user", function(){
+            var txtBox = element(by.model("name"));
+            txtBox.sendKeys("Magesh");
 
-  it('should automatically redirect to /view1 when location hash/fragment is empty', function() {
-    browser.get('index.html');
-    expect(browser.getLocationAbsUrl()).toMatch("/view1");
-  });
+            var greetBtn = element(by.buttonText("Greet"));
+            greetBtn.click();
 
-
-  describe('view1', function() {
-
-    beforeEach(function() {
-      browser.get('index.html#/view1');
+            var div = element(by.binding("message"));
+            expect(div.getText()).toBe("Hi Magesh, Have a nice day!");
+        });
     });
 
 
-    it('should render view1 when user navigates to /view1', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 1/);
-    });
-
-  });
-
-
-  describe('view2', function() {
-
-    beforeEach(function() {
-      browser.get('index.html#/view2');
-    });
-
-
-    it('should render view2 when user navigates to /view2', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 2/);
-    });
-
-  });
-    
-  describe('greet', function(){
-      beforeEach(function(){
-          browser.get("index.html#/greet")
-      });
-      
-      it("should display the message when greeted", function(){
-            var txtName = element(by.model("name"));
-            txtName.sendKeys("Magesh");
-          
-            var btnGreet = element(by.buttonText("Greet"));
-            btnGreet.click();
-          
-            var expectedMessage = 'Hi Magesh, Have a nice day!';
-            var divMessage = element(by.binding("message"));
-            var actualMessage = divMessage.getText();
-            expect(actualMessage).toBe(expectedMessage);
-      })
-  })
 });

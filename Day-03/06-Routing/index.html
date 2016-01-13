@@ -23,6 +23,10 @@
                     controller : "productsController",
                     templateUrl : "templates/productsTemplate.html"
                 })
+                .when("/products/:productid", {
+                    controller : "productInfoController",
+                    templateUrl : "templates/productInfoTemplate.html"
+                })
                 .when("/customers", {
                     //template : "<h3>Customers</h3>"
                 templateUrl : "templates/customersTemplate.html"
@@ -43,6 +47,12 @@
         });
         routingApp.controller("productsController", function($scope, productService){
             $scope.products = productService.getAll();
+        });
+        routingApp.controller("productInfoController", function($scope, productService, $routeParams){
+            var productId = parseInt($routeParams.productid)
+            $scope.product = productService.getAll().filter(function(product){
+                return product.id === productId;
+            })[0];
         });
     </script>
 </head>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="angular.js"></script>
+    <script>
+        var myApp = angular.module("myApp", []);
+
+        myApp.config(function(greeterProvider, myServiceProvider){
+
+            console.log("app in config phase");
+            console.log("myServiceProvider", myServiceProvider);
+
+            console.log("greeterProvider", greeterProvider);
+            console.log("configuring the greeterProvider");
+            greeterProvider.setMessage("Hello ");
+        });
+
+        myApp.service("myService", function(){
+            this.doSomething = function(){
+                console.log("Yup! I have done it!!");
+            }
+        })
+
+        myApp.run(function(greeter, myService){
+            console.log(myService.doSomething());
+            console.log("app in run phase");
+            console.log("greeter", greeter);
+            console.log(greeter.greet("Magesh"));
+        });
+
+        myApp.provider("greeter", function(){
+            var _message = 'Hi '
+            return { /* returned during config*/
+                setMessage : function(msg){
+                    _message = msg;
+                },
+                $get : function(){
+                    console.log("greeter is initialized");
+                    return { /*returned in run */
+                        greet : function(name){
+                            return _message + name + '!';
+                        }
+                    };
+                }
+            }
+
+
+        })
+    </script>
+</head>
+<body ng-app="myApp">
+    <div>{{ 'something' | myFilter}} </div>
+</body>
+</html>

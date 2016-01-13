@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Routing Demo</title>
+    <style>
+        ol.menu {
+            list-style: none;
+        }
+        ol.menu li{
+            margin-right: 10px;
+            display: inline;
+        }
+    </style>
+    <script src="angular.js"></script>
+    <script src="angular-route.js"></script>
+    <script>
+        var routingApp = angular.module("routingApp", ["ngRoute"]);
+        routingApp.config(function($routeProvider){
+            $routeProvider
+                .when("/products", {
+                    //template : "<h3>Products</h3>"
+                    controller : "productsController",
+                    templateUrl : "templates/productsTemplate.html"
+                })
+                .when("/customers", {
+                    //template : "<h3>Customers</h3>"
+                templateUrl : "templates/customersTemplate.html"
+                })
+                .otherwise({
+                    redirectTo : "/products"
+                });
+        });
+        routingApp.service("productService", function(){
+            this.getAll = function(){
+                return [
+                    {id : 3, name : "Pen", cost : 5, units : 1000, desc :"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti vero odio quaerat molestiae doloremque vitae quam, adipisci neque nam consequuntur commodi quia, repellat, deserunt incidunt praesentium nobis, molestias est expedita. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe mollitia, quidem. Vel, pariatur repudiandae earum, dolore dolorum numquam officia, a, molestias dolorem consequuntur ratione! Placeat qui labore asperiores omnis repellat.Lorem ipsum dolor sit amet"},
+                    {id : 6, name : "Hen", cost : 100, units : 100, desc :"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti vero odio quaerat molestiae doloremque vitae quam, adipisci neque nam consequuntur commodi quia, repellat, deserunt incidunt praesentium nobis, molestias est expedita. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe mollitia, quidem. Vel, pariatur repudiandae earum, dolore dolorum numquam officia, a, molestias dolorem consequuntur ratione! Placeat qui labore asperiores omnis repellat.Lorem ipsum dolor sit amet"},
+                    {id : 9, name : "Ten", cost : 10, units : 10, desc :"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti vero odio quaerat molestiae doloremque vitae quam, adipisci neque nam consequuntur commodi quia, repellat, deserunt incidunt praesentium nobis, molestias est expedita. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe mollitia, quidem. Vel, pariatur repudiandae earum, dolore dolorum numquam officia, a, molestias dolorem consequuntur ratione! Placeat qui labore asperiores omnis repellat.Lorem ipsum dolor sit amet"},
+                    {id : 4, name : "Zen", cost : 10000, units : 10000, desc :"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti vero odio quaerat molestiae doloremque vitae quam, adipisci neque nam consequuntur commodi quia, repellat, deserunt incidunt praesentium nobis, molestias est expedita. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe mollitia, quidem. Vel, pariatur repudiandae earum, dolore dolorum numquam officia, a, molestias dolorem consequuntur ratione! Placeat qui labore asperiores omnis repellat.Lorem ipsum dolor sit amet"}
+                ]
+            }
+        });
+        routingApp.controller("productsController", function($scope, productService){
+            $scope.products = productService.getAll();
+        });
+    </script>
+</head>
+<body ng-app="routingApp">
+    <h1>Flopkart</h1>
+    <ol class="menu">
+        <li><a href="#/products">Products</a></li>
+        <li><a href="#/customers">Customers</a></li>
+    </ol>
+    <hr>
+    <div class="content" ng-view>
+
+    </div>
+</body>
+</html>

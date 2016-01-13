@@ -3,7 +3,7 @@
     {
       "id": 1,
       "name": "This is a new bug",
-      "isClosed": false,
+      "isClosed": true,
       "createdAt": "2016-01-13T04:24:42.732Z"
     },
     {
@@ -11,6 +11,12 @@
       "name": "This is juz another new bug",
       "isClosed": false,
       "createdAt": "2016-01-13T04:24:50.973Z"
+    },
+    {
+      "id": 3,
+      "name": "Server is too slow!",
+      "isClosed": false,
+      "createdAt": "2016-01-13T09:05:47.322Z"
     }
   ]
 }

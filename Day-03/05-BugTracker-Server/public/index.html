@@ -29,10 +29,10 @@
                 length
 
 
-        9. Display 'createdAt' for each bug
-        10. Persist the bugs in the server
+        9. Display 'createdAt' for each bug - done
+        10. Persist the bugs in the server - done
         --------------------------
-        11. Categorize the bugs
+        11. Categorize the bugs (routing)
 
     -->
     <style>
@@ -81,6 +81,14 @@
             return {
                 toggle : function(){
                     this.isClosed = !this.isClosed;
+                },
+                createNew : function(defaults){
+                    return {
+                       id : defaults.id || 0,
+                       name : defaults.name || '',
+                       isClosed : defaults.isClosed || false,
+                       createdAt : defaults.createdAt || new Date()
+                   };
                 }
             }
         });
@@ -92,50 +100,48 @@
             };
         });
 
-        bugTrackerApp.service("bugStorage", function(bugOperations, $window, $rootScope){
+       bugTrackerApp.service("bugServer", function($http, bugOperations){
+           this.getAll = function(){
+               return $http
+                   .get("http://localhost:6060/bugs")
+                    .then(function(response){
+                        return response.data;
+                    });
+           }
+           this.toggle = function(bug){
+               bugOperations.toggle.call(bug);
+               return $http
+                   .put("http://localhost:6060/bugs/" + bug.id, bug)
+                   .then(function(response){
+                        return response.data;
+                    });
+           };
+           this.addNew = function(bugName){
+               var newBug = bugOperations.createNew({name : bugName});
+               return $http
+                    .post("http://localhost:6060/bugs", newBug)
+                    .then(function(response){
+                        return response.data;
+                    });
+           }
+       });
 
-            var storage = $window.localStorage;
-            var self = this;
+        bugTrackerApp.controller("bugsController", function($scope, bugServer){
+            $scope.bugs = [];
+            bugServer.getAll().then(function(bugs){
+                $scope.bugs = bugs;
+            });
 
-            function loadList(){
-                self.list = angular.fromJson(storage.getItem('bugs')) || [];
-                $rootScope.$applyAsync();
-            }
-            loadList();
-
-            $window.addEventListener("storage", loadList);
-
-            function getNextBugId(){
-                return self.list.reduce(function(result, bug){
-                    return result > bug.id ? result : bug.id;
-                },0) + 1;
-            }
-
-            this.addNew = function(bugName){
-                var newBug = {
-                    id : getNextBugId(),
-                    name : bugName,
-                    isClosed : false,
-                    createdAt : new Date()
-                }
-                self.list.push(newBug);
-                storage.setItem("bugs", angular.toJson(self.list));
-            }
-
-            this.removeClosed = function(){
-                self.list = self.list.filter(function(bug){
-                    return !bug.isClosed;
-                });
-                storage.setItem("bugs", angular.toJson(self.list));
+            $scope.toggle = function(bug){
+                bugServer.toggle(bug);
             };
-            this.toggle = function(bug){
-                bugOperations.toggle.call(bug);
-                storage.setItem("bugs", angular.toJson(self.list));
-            }
-        });
 
-        bugTrackerApp.controller("bugsController", function($scope, bugStorage){
-            $scope.bugs = bugStorage;
+            $scope.addNew = function(bugName){
+                bugServer.addNew(bugName).then(function(newBug){
+                    $scope.bugs.push(newBug);
+                });
+            };
+
         });
 
     </script>
@@ -146,9 +152,9 @@
     <section class="bugs" ng-controller="bugsController">
         <section class="stats">
             <!--<span class="closed">{{ (bugs | filter:{isClosed : true}).length }}</span>-->
-            <span class="closed">{{bugs.list | closedCount}}</span>
+            <span class="closed">{{bugs | closedCount}}</span>
             <span> / </span>
-            <span>{{bugs.list.length}}</span>
+            <span>{{bugs.length}}</span>
         </section>
         <section class="search">
             <label for="">Search :</label>
@@ -166,12 +172,12 @@
         <section class="list">
             <label for="">Bug :</label>
             <input type="text" ng-model="newBug">
-            <input type="button" value="Add Bug" id="btnAddBug" ng-click="bugs.addNew(newBug)">
-            <input type="button" value="Remove Closed" id="btnRemoveClosed" ng-click="bugs.removeClosed()">
+            <input type="button" value="Add Bug" id="btnAddBug" ng-click="addNew(newBug)">
+            <input type="button" value="Remove Closed" id="btnRemoveClosed" ng-click="removeClosed()">
             <ol>
-               <li ng-repeat="bug in (bugs.list | filter:searchBug | orderBy:bugOrder.by:bugOrder.order)">
+               <li ng-repeat="bug in (bugs | filter:searchBug | orderBy:bugOrder.by:bugOrder.order)">
                    <span
-                       ng-click="bugs.toggle(bug)"
+                       ng-click="toggle(bug)"
                        ng-class="{closed : bug.isClosed}">
                         {{bug.name | trimText:20}}
                     </span>
